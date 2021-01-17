@@ -3,18 +3,22 @@ import 'dart:convert';
 class RestaurantModel {
   final int amountdesk;
   final String name;
+  final String token;
   RestaurantModel({
     this.amountdesk,
     this.name,
+    this.token,
   });
 
   RestaurantModel copyWith({
     int amountdesk,
     String name,
+    String token,
   }) {
     return RestaurantModel(
       amountdesk: amountdesk ?? this.amountdesk,
       name: name ?? this.name,
+      token: token ?? this.token,
     );
   }
 
@@ -22,6 +26,7 @@ class RestaurantModel {
     return {
       'amountdesk': amountdesk,
       'name': name,
+      'token': token,
     };
   }
 
@@ -31,6 +36,7 @@ class RestaurantModel {
     return RestaurantModel(
       amountdesk: map['amountdesk'],
       name: map['name'],
+      token: map['token'],
     );
   }
 
@@ -39,7 +45,7 @@ class RestaurantModel {
   factory RestaurantModel.fromJson(String source) => RestaurantModel.fromMap(json.decode(source));
 
   @override
-  String toString() => 'RestaurantModel(amountdesk: $amountdesk, name: $name)';
+  String toString() => 'RestaurantModel(amountdesk: $amountdesk, name: $name, token: $token)';
 
   @override
   bool operator ==(Object o) {
@@ -47,9 +53,10 @@ class RestaurantModel {
   
     return o is RestaurantModel &&
       o.amountdesk == amountdesk &&
-      o.name == name;
+      o.name == name &&
+      o.token == token;
   }
 
   @override
-  int get hashCode => amountdesk.hashCode ^ name.hashCode;
+  int get hashCode => amountdesk.hashCode ^ name.hashCode ^ token.hashCode;
 }

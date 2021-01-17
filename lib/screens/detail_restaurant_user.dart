@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ungqueue/models/queue_model.dart';
 import 'package:ungqueue/models/restaurant_model.dart';
 import 'package:ungqueue/screens/detail_desk.dart';
 import 'package:ungqueue/utility/my_style.dart';
@@ -17,7 +18,7 @@ class _DetailRestaurantUserState extends State<DetailRestaurantUser> {
   RestaurantModel model;
   List<Widget> widgets = List();
   String uidRest;
-  
+
   Map<String, int> mapAmount = Map();
 
   @override
@@ -30,6 +31,13 @@ class _DetailRestaurantUserState extends State<DetailRestaurantUser> {
   }
 
   Future<Null> readDetailDesk() async {
+   
+    if (widgets.length != 0) {
+      setState(() {
+        widgets.clear();
+      });
+    }
+
     await Firebase.initializeApp().then((value) async {
       for (var i = 1; i <= model.amountdesk; i++) {
         int amount = 0;
@@ -43,8 +51,9 @@ class _DetailRestaurantUserState extends State<DetailRestaurantUser> {
             for (var item in event.docs) {
               if (item.data() != null) {
                 amount++;
-              } else {}
-            }           
+                QueueModel model = QueueModel.fromMap(item.data());
+              }
+            }
             mapAmount[i.toString().trim()] = amount;
           }
 
@@ -82,15 +91,17 @@ class _DetailRestaurantUserState extends State<DetailRestaurantUser> {
                   uidRest: uidRest,
                 ),
               ),
-            );
+            ).then((value) {
+              readDetailDesk();
+            });
           },
-          child: Card(
+          child: Card(color: mapAmount['$i'] == null ? Colors.white : Colors.red.shade200 ,
             child: Column(
               children: [
                 Text('โต้ะ $i'),
                 mapAmount['$i'] == null
                     ? Text('No Receive')
-                    : Text('Have Receive'),
+                    : Text('จอง ${mapAmount['$i']} ที่'),
               ],
             ),
           ),

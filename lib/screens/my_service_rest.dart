@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ungqueue/models/user_model.dart';
 import 'package:ungqueue/utility/my_style.dart';
+import 'package:ungqueue/utility/normal_dialog.dart';
 import 'package:ungqueue/widget/detail_restaurant.dart';
 import 'package:ungqueue/widget/grid_desk.dart';
 
@@ -22,6 +24,24 @@ class _MyServiceRestState extends State<MyServiceRest> {
     // TODO: implement initState
     super.initState();
     readLogin();
+    aboutNotification();
+  }
+
+  Future<Null> aboutNotification() async {
+    FirebaseMessaging messaging = FirebaseMessaging();
+    messaging.configure(
+      onMessage: (message) {
+        normalDialog(context, 'You Have Message');
+      },
+      onResume: (message) {
+         normalDialog(context, 'onResume Workd');
+        print('################# OnResume Work ###############');
+      },
+      onLaunch: (message) {
+         normalDialog(context, 'onLaunch Work');
+        print('################# OnLaunch Work ###############');
+      },
+    );
   }
 
   Future<Null> readLogin() async {

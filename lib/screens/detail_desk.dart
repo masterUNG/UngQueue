@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -182,11 +183,31 @@ class _DetailDeskState extends State<DetailDesk> {
               .doc()
               .set(data)
               .then((value) {
+            sendNotificaion();
             readDetailDesk();
             normalDialog(context, 'คุณจอง Queue สำเร็จแล้ว');
           });
         },
       );
+    });
+  }
+
+  Future<Null> sendNotificaion() async {
+    await Firebase.initializeApp().then((value) async {
+      await FirebaseFirestore.instance
+          .collection('restaurant')
+          .doc(uidRest)
+          .snapshots()
+          .listen((event) async {
+        RestaurantModel model = RestaurantModel.fromMap(event.data());
+        String token = model.token;
+        print('####### token ร้านที่จะส่ง ===>> $token');
+        String title = 'หัวข้อที่จะส่ง';
+        String body = 'Message ที่จะส่ง';
+        String path =
+            'http://192.168.64.2/ungqueu/apiNotiQueue.php?isAdd=true&token=$token&title=$title&body=$body';
+        Dio().get(path).then((value) => print('Send Noti Success'));
+      });
     });
   }
 }

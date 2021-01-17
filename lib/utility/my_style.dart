@@ -52,6 +52,15 @@ class MyStyle {
         ),
       );
 
+      Text buildTitleH2(String string) => Text(
+        string,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: dartColor,
+        ),
+      );
+
   Container buildLogo() {
     return Container(
       width: 120,
